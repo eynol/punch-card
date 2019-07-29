@@ -24,6 +24,9 @@ function saveCookieFile(cookiejar) {
     fs.writeFileSync('cookiejar', JSON.stringify(cookiejar.toJSON(), null, 2))
 }
 
+
+const log = (...d) => console.log(new Date().toString(), ...d);
+
 async function fetch(url, options = {}) {
     let $url = URL.parse(url);
     let { headers = {} } = options;
@@ -40,7 +43,7 @@ async function fetch(url, options = {}) {
 
     // prepare config cookie
     let cookieString = cookiejar.getCookieStringSync($url.protocol + '//' + $url.host, { allPoints: true })
-    console.log(cookieString);
+    // console.log(cookieString);
     headers['Cookie'] = cookieString;
     options = {
         ...options,
@@ -62,7 +65,7 @@ async function fetch(url, options = {}) {
         cookies = [Cookie.parse(_setCookies)];
 
 
-    console.log(cookies)
+    // console.log(cookies)
     cookies.forEach(cookie => cookiejar.setCookieSync(cookie, $url.protocol + '//' + $url.host))
 
     saveCookieFile(cookiejar)
@@ -79,7 +82,7 @@ async function checkLogin() {
     let res = await fetch('http://www.gezhongshu.com/forum.php')
 
     let text = await res.text();
-    console.log(text)
+    // console.log(text)
     let testReg = /"访问我的空间"><\/a>/gm
     if (testReg.test(text)) {
         return false;
@@ -91,8 +94,8 @@ async function checkLogin() {
             let url = match[1];
             let res = await fetch('http://www.gezhongshu.com/' + url);
             let html = await res.json()
-            console.log(html)
-            console.log('签到成功')
+            // console.log(html)
+            log('签到成功')
         }
         return Promise.reject('=_=')
     }
@@ -118,7 +121,7 @@ async function getLoginParams() {
 }
 
 checkLogin().then(online => {
-    console.log(online)
+    log('online? ', online)
     if (online) {
         return daylySign()
     } else {
@@ -126,7 +129,9 @@ checkLogin().then(online => {
     }
 }).catch(e => {
     if (e === '=_=') {
-        console.log('登录成功')
+        log('=——=c 签到成功')
+    }else{
+        log(e)
     }
 })
 
@@ -161,9 +166,10 @@ async function login({ formhash = '', loginhash }) {
     }
     let resp = await fetch(`http://www.gezhongshu.com/member.php?mod=logging&action=login&loginsubmit=yes&handlekey=login&loginhash=${loginhash}&inajax=1`, fetchOptions)
     let text = await resp.text();
-    console.log(text)
-    let content = $(text)
-    console.log(content)
+    log('登录成功')
+    // console.log(text)
+    // let content = $(text)
+    // console.log(content)
 }
 
 
@@ -182,6 +188,9 @@ async function daylySign() {
         let url = match[1];
         let res = await fetch('http://www.gezhongshu.com/' + url);
         let html = await res.json()
+        log('签到成功')
+    } else {
+        log('已经签到了')
     }
     //                               plugin.php?id=k_misign:sign&operation=qiandao&format=button&formhash=ed573f62
 }
