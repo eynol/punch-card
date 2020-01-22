@@ -38,7 +38,7 @@ async function fetch(url, options = {}) {
         headers['Upgrade-Insecure-Requests'] = 1
     }
     if (!headers['Referers']) {
-        headers['Referer'] = "http://www.woyushu.com"
+        headers['Referer'] = "https://www.woyushu.com"
     }
 
     // prepare config cookie
@@ -80,7 +80,7 @@ const $ = require('cheerio');
 
 
 async function checkLogin() {
-    let res = await fetch('http://www.woyushu.com')
+    let res = await fetch('https://www.woyushu.com')
     if (res.redirected && res.url.match(/login/)) {
         log('检测到未登录')
         return false;
@@ -126,13 +126,14 @@ async function login() {
         method: "post",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Referer: "http://www.woyushu.com/deal/login",
+            Referer: "https://www.woyushu.com//hello/login",
+            Origin: 'https://www.woyushu.com',
             "Upgrade-Insecure-Requests": 1,
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
         },
         body: dataString,
     }
-    let resp = await fetch(`http://www.woyushu.com/deal/login`, fetchOptions)
+    let resp = await fetch(`https://www.woyushu.com/deal/login`, fetchOptions)
     let text = await resp.text();
     log('登录成功')
     // console.log(text)
@@ -147,8 +148,9 @@ async function logout() {
 }
 
 async function daylySign() {
-    let res = await fetch('http://www.woyushu.com/User/signin', {
+    let res = await fetch('https://www.woyushu.com/User/signin', {
         headers: {
+            Origin:'https://www.woyushu.com',
             "X-Requested-With": "XMLHttpRequest"
         }
     });//获取新的页面
