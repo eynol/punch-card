@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "tough-cookie": "^3.0.1"
   }
 }
